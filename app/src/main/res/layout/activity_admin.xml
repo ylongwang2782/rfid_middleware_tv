@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/fdkj_logo"
+        android:padding="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="@string/deafaultAddrSet"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/urlEditText"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_border"
+        android:hint="@string/inputAddr"
+        android:minHeight="48dp"
+        android:autofillHints="" />
+
+    <Button
+        android:id="@+id/setUrlButton"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/addrSettingConfirm" />
+
+    <Button
+        android:id="@+id/backUserButton"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="@string/backToUser" />
+
+    <Button
+        android:id="@+id/exitButton"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="@string/exitSys"
+        android:textColor="#FFFFFF"
+        tools:ignore="TextContrastCheck" />
+
+</LinearLayout>

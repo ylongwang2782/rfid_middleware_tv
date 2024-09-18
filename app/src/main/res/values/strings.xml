@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">RFID_TV_Webview</string>
+    <string name="input_website_text">请输入网址</string>
+    <string name="admin_settings_text">登录管理员界面</string>
+    <string name="administrator_settings">Administrator Settings</string>
+    <string name="backToUser">返回用户界面</string>
+    <string name="exitSys">退出系统</string>
+    <string name="fdkj_logo">fdkj logo</string>
+    <string name="deafaultAddrSet">默认访问地址设置</string>
+    <string name="inputAddr">请输入地址</string>
+    <string name="addrSettingConfirm">网址设置确认</string>
+</resources>
