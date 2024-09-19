@@ -1,83 +1,83 @@
 package com.example.rfid_tv_webview
 
-import android.annotation.SuppressLint
-import android.content.SharedPreferences
+import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
-import android.view.View
-import android.view.WindowManager
-import android.webkit.WebResourceRequest
-import android.webkit.WebSettings
 import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var webView: WebView
 
-    @SuppressLint("SetJavaScriptEnabled", "ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // 设置全屏
-        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        // 设置布局
         setContentView(R.layout.activity_main)
 
-        // webView configure
-        webView = findViewById(R.id.webView)
+        webView = findViewById(R.id.webview)
         webView.settings.javaScriptEnabled = true
-        webView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
-        webView.setWebViewClient(WebViewClient()) // Prevent opening links in external browser
 
-        val defaultUrl = "http://192.168.0.100:8083" // 默认网址
-        webView.loadUrl(defaultUrl)
-        webView.visibility = View.VISIBLE
-
-//        // 新定义的变量存储设置的网址，并通过intent从外部读取
-//        var savedUrl: String? = intent.getStringExtra("url")
-//        val sharedPreferences: SharedPreferences = getPreferences(MODE_PRIVATE)
-//        if (savedUrl != null) {
-//            // 不为空则直接加载新网址
-//            webView.loadUrl(savedUrl)
-//            // 然后存入库中，以实现刷新默认网址变量
-//            saveUrl(savedUrl)
-//        } else {
-//            // 默认的savedUrl为空则赋值上次存储的网址
-//            savedUrl = sharedPreferences.getString("url", "")
-//            if (savedUrl != null) {
-//                webView.loadUrl(savedUrl)
-//            } else {
-//                webView.loadUrl("http://192.168.0.100:8083")
-//            }
-//        }
+        // 加载保存的 URL 或默认的 URL
+        loadUrlFromPreferences()
     }
 
-    // 自定义WebViewClient，用于处理网页加载
-    private class MyWebViewClient : WebViewClient() {
-        override fun shouldOverrideUrlLoading(
-            view: WebView?, request: WebResourceRequest?
-        ): Boolean {
-            // 在WebView内加载网页，而不是使用外部浏览器
-            view?.loadUrl(request?.url.toString())
-            return true
-        }
-    }
-
-    // 保存网址函数
-    private fun saveUrl(url: String) {
-        val sharedPreferences: SharedPreferences = getPreferences(MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putString("url", url)
-        editor.apply()
-    }
-
+    // 监听 Menu 键，弹出对话框修改 URL
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
-            webView.goBack()
-            return true
+        return if (keyCode == KeyEvent.KEYCODE_MENU) {
+            showUrlInputDialog()
+            true
+        } else {
+            super.onKeyDown(keyCode, event)
         }
-        return super.onKeyDown(keyCode, event)
+    }
+
+    // 从 SharedPreferences 加载 URL 并刷新 WebView
+    private fun loadUrlFromPreferences() {
+        val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
+        val defaultUrl = "http://192.168.0.100:8083"
+        val url = sharedPreferences.getString("webview_url", defaultUrl)
+        webView.loadUrl(url ?: defaultUrl)
+    }
+
+    // 弹出一个对话框来修改 URL
+    private fun showUrlInputDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("修改网页地址")
+
+        // 创建一个 EditText 用于输入新的 URL
+        val input = EditText(this)
+        input.hint = "请输入新的 URL"
+        builder.setView(input)
+
+        // 设置对话框的按钮
+        builder.setPositiveButton("保存") { dialog, _ ->
+            val newUrl = input.text.toString()
+
+            if (newUrl.isNotEmpty()) {
+                // 保存到 SharedPreferences
+                val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putString("webview_url", newUrl)
+                editor.apply()
+
+                // 重新加载新的 URL
+                webView.loadUrl(newUrl)
+
+                // 关闭对话框
+                dialog.dismiss()
+            } else {
+                Toast.makeText(this, "URL 不能为空", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        builder.setNegativeButton("取消") { dialog, _ ->
+            dialog.cancel() // 取消操作，关闭对话框
+        }
+
+        // 显示对话框
+        builder.show()
     }
 }
