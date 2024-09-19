@@ -3,6 +3,7 @@ package com.example.rfid_tv_webview
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import android.webkit.WebResourceRequest
@@ -28,14 +29,11 @@ class MainActivity : AppCompatActivity() {
         webView = findViewById(R.id.webView)
         webView.settings.javaScriptEnabled = true
         webView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
-
-        // 设置WebView客户端
         webView.setWebViewClient(WebViewClient()) // Prevent opening links in external browser
-//        // 设置WebChromeClient以支持JavaScript的alert弹窗等
-//        webView.webChromeClient = WebChromeClient()
 
-        webView.loadUrl("http://192.168.0.100:8083") // Load your desired URL
-        webView.visibility = View.VISIBLE // Make WebView visible
+        val defaultUrl = "http://192.168.0.100:8083" // 默认网址
+        webView.loadUrl(defaultUrl)
+        webView.visibility = View.VISIBLE
 
 //        // 新定义的变量存储设置的网址，并通过intent从外部读取
 //        var savedUrl: String? = intent.getStringExtra("url")
@@ -75,4 +73,11 @@ class MainActivity : AppCompatActivity() {
         editor.apply()
     }
 
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
+            webView.goBack()
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
+    }
 }
