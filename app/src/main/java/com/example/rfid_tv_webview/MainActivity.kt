@@ -96,6 +96,7 @@ class MainActivity : AppCompatActivity() {
                 // 如果用户开始输入内容，取消倒计时
                 if (!isInputReceived && s?.isNotEmpty() == true) {
                     countdownTimer?.cancel()
+                    countdownText.text = "";
                     isInputReceived = true // 标记用户已输入，取消倒计时
                 }
             }
