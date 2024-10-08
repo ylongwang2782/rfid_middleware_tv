@@ -49,9 +49,21 @@ class MainActivity : AppCompatActivity() {
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
 
-        val input = EditText(this)
-        input.hint = "请输入新的 URL"
-        layout.addView(input)
+        // 创建用于输入 URL 的 EditText
+        val inputUrl = EditText(this)
+        inputUrl.hint = "请输入网页地址"
+        layout.addView(inputUrl)
+
+        // 创建用于输入用户名的 EditText
+        val inputUsername = EditText(this)
+        inputUsername.hint = "请输入用户名"
+        layout.addView(inputUsername)
+
+        // 创建用于输入密码的 EditText
+        val inputPassword = EditText(this)
+        inputPassword.hint = "请输入密码"
+        inputPassword.inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
+        layout.addView(inputPassword)
 
         val countdownText = TextView(this)
         layout.addView(countdownText)
@@ -60,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
         // 设置对话框的按钮
         builder.setPositiveButton("保存") { dialog, _ ->
-            val newUrl = input.text.toString()
+            val newUrl = inputUrl.text.toString()
 
             if (newUrl.isNotEmpty()) {
                 // 保存到 SharedPreferences
@@ -91,7 +103,7 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
 
         // 添加TextWatcher监听输入
-        input.addTextChangedListener(object : TextWatcher {
+        inputUrl.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 // 如果用户开始输入内容，取消倒计时
                 if (!isInputReceived && s?.isNotEmpty() == true) {
@@ -109,7 +121,7 @@ class MainActivity : AppCompatActivity() {
         countdownTimer = object : CountDownTimer(5000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val secondsLeft = millisUntilFinished / 1000
-                countdownText.text = "倒计时: $secondsLeft 秒后将使用默认参数继续"
+                countdownText.text = "请输入参数， $secondsLeft 秒后将使用默认参数继续"
             }
 
             override fun onFinish() {
