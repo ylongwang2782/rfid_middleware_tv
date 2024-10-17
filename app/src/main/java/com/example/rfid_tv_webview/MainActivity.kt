@@ -40,19 +40,29 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
         val defaultUrl = "http://192.168.0.100:8083"
         val url = sharedPreferences.getString("webview_url", defaultUrl)
+
+        // 使用WebViewClient让WebView加载网页，而不跳转到默认浏览器
+        webView.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+
+                // 在页面加载完成后，自动输入账号密码并提交表单
+                val username = "admin"
+                val password = "123456"
+
+                val savedUsername = sharedPreferences.getString("username", "")
+                val savedPassword = sharedPreferences.getString("password", "")
+
+                val js = """
+                    document.getElementById('username').value = '$savedUsername';
+                    document.getElementById('password').value = '$savedPassword';
+                    document.querySelector('button').click();
+                """.trimIndent()
+
+                webView.evaluateJavascript(js, null)
+            }
+        }
         webView.loadUrl(url ?: defaultUrl)
-    }
-
-    private fun autoLogin() {
-        // 定义 JavaScript 代码，将用户名和密码填入表单并提交
-        val jsCode = """
-            document.getElementById('username').value = '$username';
-            document.getElementById('password').value = '$password';
-            document.getElementById('loginForm').submit();
-        """.trimIndent()
-
-        // 执行 JavaScript
-        webView.evaluateJavascript(jsCode, null)
     }
 
     // 弹出一个对话框来修改 URL，用户名和密码，带有倒计时
