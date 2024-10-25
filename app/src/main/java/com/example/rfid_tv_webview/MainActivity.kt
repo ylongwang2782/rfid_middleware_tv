@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
         val defaultUrl = "http://192.168.0.100:8083"
         val url = sharedPreferences.getString("webview_url", defaultUrl)
+        webView.clearCache(true);
 
         // 使用WebViewClient让WebView加载网页，而不跳转到默认浏览器
         webView.webViewClient = object : WebViewClient() {
@@ -54,9 +55,19 @@ class MainActivity : AppCompatActivity() {
                 val savedPassword = sharedPreferences.getString("password", "")
 
                 val js = """
-                    document.getElementById('username').value = '$savedUsername';
-                    document.getElementById('password').value = '$savedPassword';
-                    document.querySelector('button').click();
+                    
+        setTimeout(function () {
+            const accountInput = document.querySelector('#account');
+            accountInput.value = '$savedUsername';
+            accountInput.dispatchEvent(new Event('input'));
+
+            const passwordInput = document.querySelector('#password');
+            passwordInput.value = '$savedPassword';
+            passwordInput.dispatchEvent(new Event('input'));
+ 
+            document.querySelector('button').click();
+        }, 1000);
+                    
                 """.trimIndent()
 
                 webView.evaluateJavascript(js, null)
@@ -121,6 +132,7 @@ class MainActivity : AppCompatActivity() {
                 editor.apply()
 
                 // 重新加载新的 URL
+                webView.clearCache(true);
                 webView.loadUrl(newUrl)
 
                 // 标记用户已输入
