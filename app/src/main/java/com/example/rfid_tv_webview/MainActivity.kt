@@ -56,6 +56,10 @@ class MainActivity : AppCompatActivity() {
 
                 val js = """
                     
+        document.cookie.split(";").forEach(function (c) {
+            document.cookie = c.trim().split("=")[0] + "=;expires=" + new Date(0).toUTCString() + ";path=/";
+        });
+
         setTimeout(function () {
             const accountInput = document.querySelector('#account');
             accountInput.value = '$savedUsername';
@@ -64,7 +68,7 @@ class MainActivity : AppCompatActivity() {
             const passwordInput = document.querySelector('#password');
             passwordInput.value = '$savedPassword';
             passwordInput.dispatchEvent(new Event('input'));
- 
+
             document.querySelector('button').click();
         }, 1000);
                     
