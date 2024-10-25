@@ -137,7 +137,8 @@ class MainActivity : AppCompatActivity() {
 
                 // 重新加载新的 URL
                 webView.clearCache(true);
-                webView.loadUrl(newUrl)
+//                webView.loadUrl(newUrl)
+                loadUrlFromPreferences()
 
                 // 标记用户已输入
                 isInputReceived = true
